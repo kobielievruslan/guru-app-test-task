@@ -1,0 +1,116 @@
+# Guru Test Task App — Turborepo Monorepo
+
+This repository contains a full-stack application built with:
+
+- **Turborepo** — monorepo orchestration
+- **Next.js** (frontend)
+- **emotion/css** (styles)
+- **NestJS** (Backend-for-Frontend)
+- **PostgreSQL**
+- **TypeORM**
+- **WebSockets** for realtime sync
+- **TanStack Table + Virtualizer** for large datasets
+- **Docker Compose** for local development
+
+The system supports infinite scrolling, inline editing, realtime updates, and efficient rendering of **50,000+ rows**.
+
+---
+
+## Architecture
+
+root/
+├── apps/
+│   ├── frontend/   # Next.js client
+│   └── bff/        # NestJS API + WebSockets
+│
+├── docker-compose.yml
+├── turbo.json
+├── package.json
+└── Dockerfile
+
+## Requirements
+
+- Node.js 20+
+- PNPM (via `corepack enable`)
+- Docker + Docker Compose
+
+---
+
+## Running with Docker (recommended)
+
+```bash
+docker compose up --build
+
+This will:
+	•	start PostgreSQL
+	•	seed 50k rows
+	•	run backend (3001)
+	•	run frontend (3000)
+
+Frontend: http://localhost:3000
+Backend API: http://localhost:3001
+```
+
+## Local Setup (without Docker)
+
+```bash
+1. Start PostgreSQL
+
+docker run --name guru-db \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=guru_db \
+  -p 5432:5432 \
+  -d postgres:16-alpine
+
+2. Install dependencies
+
+pnpm install
+
+3. Seed database
+
+pnpm --filter ./apps/bff... run seed
+
+4. Start all apps
+
+pnpm dev
+```
+
+## Root Scripts
+
+```bash
+1. Run frontend + backend
+
+pnpm dev
+
+2. Build all package
+```
+
+## Backend Scripts
+
+```bash
+1. Run NestJS in watch mode
+
+pnpm dev
+
+2. Seed database
+
+pnpm seed
+```
+
+## Frontend Scripts
+
+```bash
+1. Next.js dev server
+
+pnpm dev
+
+2. Build frontend
+
+pnpm build
+```
+
+## Environment Variables
+
+DATABASE_URL=postgresql://postgres:postgres@db:5432/guru_db?schema=public
+NEXT_PUBLIC_BFF_URL=http://localhost:3001
